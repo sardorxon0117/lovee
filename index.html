@@ -18,6 +18,7 @@
     --seal: #7c2233;
     --seal-2: #9c2f45;
     --shadow: 63, 32, 39;
+    --glow-rgb: 178, 58, 82;
 
     --paper: #fdf3ec;
     --paper-edge: rgba(63, 32, 39, 0.14);
@@ -36,6 +37,7 @@
       --seal: #400f18;
       --seal-2: #5f1c2a;
       --shadow: 0, 0, 0;
+      --glow-rgb: 234, 143, 161;
     }
   }
   :root[data-theme="dark"] {
@@ -48,6 +50,7 @@
     --seal: #400f18;
     --seal-2: #5f1c2a;
     --shadow: 0, 0, 0;
+    --glow-rgb: 234, 143, 161;
   }
   :root[data-theme="light"] {
     --bg: #fbf1ec;
@@ -59,6 +62,7 @@
     --seal: #7c2233;
     --seal-2: #9c2f45;
     --shadow: 63, 32, 39;
+    --glow-rgb: 178, 58, 82;
   }
 
   * { box-sizing: border-box; }
@@ -230,7 +234,6 @@
     cursor: pointer;
     z-index: 3;
     transition: transform 0.5s ease, opacity 0.4s ease;
-    animation: heart-pulse 2.1s ease-in-out infinite;
   }
   .heart-btn::before, .heart-btn::after {
     content: "";
@@ -243,14 +246,17 @@
     border-radius: 29px 29px 0 0;
     transform: rotate(-45deg);
     transform-origin: 0 100%;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.32);
+    animation: heart-glow 2.1s ease-in-out infinite;
   }
   .heart-btn::after { left: 0; transform: rotate(45deg); transform-origin: 100% 100%; }
-  .envelope.open .heart-btn { transform: translate(-50%, -50%) scale(0); opacity: 0; animation: none; }
+  .envelope.open .heart-btn { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  .envelope.open .heart-btn::before, .envelope.open .heart-btn::after { animation: none; }
 
-  @keyframes heart-pulse {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); }
-    50% { transform: translate(-50%, -50%) scale(1.08); }
+  /* geometry of .heart-btn itself never changes here (only box-shadow) so
+     the tap target stays hit-testable and stable on touch devices */
+  @keyframes heart-glow {
+    0%, 100% { box-shadow: 0 6px 16px rgba(0,0,0,0.32); }
+    50% { box-shadow: 0 6px 16px rgba(0,0,0,0.32), 0 0 22px 7px rgba(var(--glow-rgb), 0.5); }
   }
 
   .cover-hint {
